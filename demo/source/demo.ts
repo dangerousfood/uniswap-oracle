@@ -1,38 +1,65 @@
-import { Crypto } from '@peculiar/webcrypto'
-;(global as any).crypto = new Crypto()
-import * as OracleSdk from '@keydonix/uniswap-oracle-sdk'
-import { PriceEmitter } from './generated/price-emitter'
-import { deployAllTheThings } from './deploy-contract'
-import { createMnemonicRpc } from './rpc-factories'
-import { ethGetBlockByNumber } from './adapters';
-import { resetUniswapAndAccount, setPrice } from './uniswap-helpers';
+import * as OracleSdk from '../../sdk/source/index';
+import * as rlpEncoder from '../../sdk/source/rlp-encoder'
+import { ethers, BigNumber } from '../node_modules/ethers';
+const Web3 = require('../node_modules/web3')
+const JSON_RPC = 'https://eth-mainnet.alchemyapi.io/v2/akJ4Iz9CBxJ6HduDFaNUwwg1igCzQmDk'
 
 async function main() {
-	const gasPrice = 10n**9n
-	const rpc = await createMnemonicRpc('http://localhost:1237', gasPrice)
-	const rpcSignerAddress = await rpc.addressProvider()
+	const address = BigInt("0xbb2b8038a1640196fbe3e38816f3e67cba72d940")
+	const token0 = BigInt("0x2260fac5e5542a773aa44fbcfedf7c193bc2c599")
+	const blockNumber = BigInt("12613921")
+	const proof = await OracleSdk.getProof(getStorageAt, getProof, getBlockByNumber, address, token0, blockNumber)
+	console.log(proof)
+}
 
-	const { uniswapExchange, priceEmitter, token0, token1 } = await deployAllTheThings(rpc)
 
-	// seed Uniswap with some liquidity at 1:1 ratio between the two tokens, then cause the price to move to 2:1
-	await resetUniswapAndAccount(uniswapExchange, token0, token1, rpcSignerAddress, 1n, 1n)
-	await uniswapExchange.sync() // First block with 1:1 price starting
-	const blockNumber = await rpc.getBlockNumber() // Grab the first block after the sync is called, new blocks will be at 1:1 ratio from here
-	await setPrice(uniswapExchange, token0, token1, 2n, 1n) // So far two blocks at 1:1 price (one transfer, one sync), blocks after this will record 2:1 price
-	await uniswapExchange.sync() // First block with 2:1 price
+export function wireEncodeNumber(value: number | bigint, padding: number = 0): string {
+	if (value < 0) throw new Error(`Wire encoded values must be positive.  Received: ${value}`)
+	if (typeof value === 'number' && value > 2**52) throw new Error(`Wire encoded number values cannot be bigger than ${2**52}.  Received: ${value}`)
+	if (typeof value === 'bigint' && value >= 2**256) throw new Error(`Wire encoded bigint values must be smaller than ${2n**256n}.  Received: ${value}`)
+	return `0x${value.toString(16).padStart(padding, '0')}`
+}
 
-	// get the proof from the SDK
-	const proof = await OracleSdk.getProof(rpc.getStorageAt, rpc.getProof, ethGetBlockByNumber.bind(undefined, rpc), uniswapExchange.address, token0.address, blockNumber)
+const getStorageAt = async (address: bigint, position: bigint, block: bigint | 'latest'): Promise<bigint> => {
+	const provider = new ethers.providers.JsonRpcProvider(JSON_RPC)
+	return provider.getStorageAt(wireEncodeNumber(address), position, 12596295).then(value => BigInt(value))
+}
 
-	// call our contract with the proof and inspect the price it witnessed
-	const events = await priceEmitter.emitPrice(uniswapExchange.address, token0.address, 4n, 4n, proof)
-	const contractPrice = (events.find(x => x.name === 'Price') as PriceEmitter.Price).parameters.price
-	// Uniswap oracle prices are binary fixed point numbers with 112 fractional bits, so we convert to floating point here (may suffer rounding errors, use with caution in production)
-	console.log(`Contract Price: ${Number(contractPrice) / 2**112}`)
+const getProof = async (address: bigint, positions: readonly bigint[], block: bigint):Promise<OracleSdk.ProofResult> => {
+	const provider = new ethers.providers.JsonRpcProvider(JSON_RPC)
+	const proof = await provider.send("eth_getProof", [ wireEncodeNumber(address), positions.map(value => ethers.utils.formatBytes32String(value.toString())), ethers.utils.hexValue(block)])
+	return {
+		accountProof: proof.accountProof.map((result: string) => rlpEncoder.hexStringToUint8Array(result)),
+		storageProof: proof.storageProof.map((result: { key: any; value: any; proof: [any];}) => {
+			return {
+				key: BigInt(result.key),
+				value: BigInt(result.value),
+				proof: result.proof.map(result => rlpEncoder.hexStringToUint8Array(result)),
+			}
+		}),
+	}
+}
 
-	// ask the SDK for a price estimate as of the latest block, which should match what the SDK said (since it executed in the latest block)
-	const sdkPrice = await OracleSdk.getPrice(rpc.getStorageAt, ethGetBlockByNumber.bind(undefined, rpc), uniswapExchange.address, token0.address, blockNumber)
-	console.log(`SDK Price: ${Number(sdkPrice) / 2**112}`)
+const getBlockByNumber = async (blockNumber: bigint | 'latest'):Promise<OracleSdk.Block | null> => {
+	const provider = new ethers.providers.JsonRpcProvider(JSON_RPC)
+	const block = await provider.send("eth_getBlockByNumber", [(blockNumber !== 'latest') ? ethers.utils.hexValue(blockNumber): blockNumber, false])
+	return {
+		parentHash: BigInt(block.parentHash),
+		sha3Uncles: BigInt(block.sha3Uncles),
+		miner: BigInt(block.miner),
+		stateRoot: BigInt(block.stateRoot),
+		transactionsRoot: BigInt(block.transactionsRoot),
+		receiptsRoot: BigInt(block.receiptsRoot),
+		logsBloom: BigInt(block.logsBloom),
+		difficulty: BigInt(block.difficulty),
+		number: BigInt(block.number),
+		gasLimit: BigInt(block.gasLimit),
+		gasUsed: BigInt(block.gasUsed),
+		timestamp: BigInt(block.timestamp),
+		extraData: rlpEncoder.hexStringToUint8Array(block.extraData),
+		mixHash: BigInt(block.mixHash),
+		nonce: BigInt(block.nonce),
+	}
 }
 
 main().then(() => {
