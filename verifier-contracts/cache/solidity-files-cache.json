@@ -1,0 +1,254 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "/home/dangerousfood/dev/uniswap-oracle/verifier-contracts/node_modules/hardhat/console.sol": {
+      "lastModificationDate": 1623793426845,
+      "contentHash": "cc4777addd464ea56fa35b1c45df0591",
+      "sourceName": "hardhat/console.sol",
+      "solcConfig": {
+        "version": "0.6.8",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.4.22 <0.9.0"
+      ],
+      "artifacts": [
+        "console"
+      ]
+    },
+    "/home/dangerousfood/dev/uniswap-oracle/verifier-contracts/contracts/BlockVerifier.sol": {
+      "lastModificationDate": 1624302080844,
+      "contentHash": "845e76232c8b94cbf78574d7e7bf56d7",
+      "sourceName": "contracts/BlockVerifier.sol",
+      "solcConfig": {
+        "version": "0.6.8",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "hardhat/console.sol"
+      ],
+      "versionPragmas": [
+        "0.6.8"
+      ],
+      "artifacts": [
+        "BlockVerifier"
+      ]
+    },
+    "/home/dangerousfood/dev/uniswap-oracle/verifier-contracts/contracts/UniswapOracle.sol": {
+      "lastModificationDate": 1624301179007,
+      "contentHash": "a60348f141f1d58f2b98eaeefbf0bed0",
+      "sourceName": "contracts/UniswapOracle.sol",
+      "solcConfig": {
+        "version": "0.6.8",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./BlockVerifier.sol",
+        "./MerklePatriciaVerifier.sol",
+        "./Rlp.sol",
+        "./IUniswapV2Pair.sol",
+        "./UQ112x112.sol",
+        "hardhat/console.sol"
+      ],
+      "versionPragmas": [
+        "0.6.8"
+      ],
+      "artifacts": [
+        "UniswapOracle"
+      ]
+    },
+    "/home/dangerousfood/dev/uniswap-oracle/verifier-contracts/contracts/MerklePatriciaVerifier.sol": {
+      "lastModificationDate": 1623793741110,
+      "contentHash": "9d794ec0114f3a91d8a38b7d27614d24",
+      "sourceName": "contracts/MerklePatriciaVerifier.sol",
+      "solcConfig": {
+        "version": "0.6.8",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./Rlp.sol"
+      ],
+      "versionPragmas": [
+        "0.6.8"
+      ],
+      "artifacts": [
+        "MerklePatriciaVerifier"
+      ]
+    },
+    "/home/dangerousfood/dev/uniswap-oracle/verifier-contracts/contracts/Rlp.sol": {
+      "lastModificationDate": 1623793741139,
+      "contentHash": "06ba67a21d3bfd702db2ada53c7e04c1",
+      "sourceName": "contracts/Rlp.sol",
+      "solcConfig": {
+        "version": "0.6.8",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.6.8"
+      ],
+      "artifacts": [
+        "Rlp"
+      ]
+    },
+    "/home/dangerousfood/dev/uniswap-oracle/verifier-contracts/contracts/IUniswapV2Pair.sol": {
+      "lastModificationDate": 1623793741087,
+      "contentHash": "324f14f088b06e9f95865320600cfaf3",
+      "sourceName": "contracts/IUniswapV2Pair.sol",
+      "solcConfig": {
+        "version": "0.6.8",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.6.8"
+      ],
+      "artifacts": [
+        "IUniswapV2Pair"
+      ]
+    },
+    "/home/dangerousfood/dev/uniswap-oracle/verifier-contracts/contracts/UQ112x112.sol": {
+      "lastModificationDate": 1623793741187,
+      "contentHash": "663954a0ddeb8094e5ae3aef84e36fef",
+      "sourceName": "contracts/UQ112x112.sol",
+      "solcConfig": {
+        "version": "0.6.8",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.6.8"
+      ],
+      "artifacts": [
+        "UQ112x112"
+      ]
+    }
+  }
+}
