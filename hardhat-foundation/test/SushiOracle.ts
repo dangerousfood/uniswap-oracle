@@ -1,7 +1,7 @@
 import { ethers } from "hardhat";
 import { Signer } from "ethers";
-import { getStorageAt, getProof, getBlockByNumber, getBlockHashByNumber } from "../../library/source/demo"
-import * as OracleSdk from '../../sdk/source/index'
+import { getStorageAt, getProof, getBlockByNumber, getBlockHashByNumber, BlockHash } from "../../library/source/demo";
+import * as OracleSdk from '@keydonix/uniswap-oracle-sdk';
 
 describe("Token", function () {
   let accounts: Signer[];
@@ -12,10 +12,10 @@ describe("Token", function () {
 
   it("should do something right", async function () {
     // Do something with the accounts
-    const UniswapOracle = await ethers.getContractFactory("UniswapOracle");
-    const uniswapOracle = await UniswapOracle.deploy();
+    const SushiOracle = await ethers.getContractFactory("SushiOracle");
+    const sushiOracle = await SushiOracle.deploy();
 
-    await uniswapOracle.deployed();
+    await sushiOracle.deployed();
 
     const JSON_RPC = 'https://eth-mainnet.alchemyapi.io/v2/akJ4Iz9CBxJ6HduDFaNUwwg1igCzQmDk'
     const provider = new ethers.providers.JsonRpcProvider(JSON_RPC)
@@ -26,7 +26,7 @@ describe("Token", function () {
     const proof = await OracleSdk.getProof(getStorageAt, getProof, getBlockByNumber, address, token0, blockNumber)
     const block = await getBlockHashByNumber(blockNumber)
     
-    const result = await uniswapOracle.getPriceRaw(ethers.utils.hexValue(address), true, proof, ethers.utils.hexValue(block.hash))
+    const result = await sushiOracle.getPriceRaw(ethers.utils.hexValue(address), true, proof, ethers.utils.hexValue(block.hash))
     console.log(result)
   });
 });
