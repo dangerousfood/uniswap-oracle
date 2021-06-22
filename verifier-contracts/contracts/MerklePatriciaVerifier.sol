@@ -1,6 +1,7 @@
 pragma solidity 0.6.8;
 
 import { Rlp } from "./Rlp.sol";
+import "hardhat/console.sol";
 
 library MerklePatriciaVerifier {
 	/*
@@ -12,7 +13,7 @@ library MerklePatriciaVerifier {
 	 *
 	 * WARNING: Does not currently support validation of unset/0 values!
 	 */
-	function getValueFromProof(bytes32 expectedRoot, bytes32 path, bytes memory proofNodesRlp) internal pure returns (bytes memory) {
+	function getValueFromProof(bytes32 expectedRoot, bytes32 path, bytes memory proofNodesRlp) internal view returns (bytes memory) {
 		Rlp.Item memory rlpParentNodes = Rlp.toItem(proofNodesRlp);
 		Rlp.Item[] memory parentNodes = Rlp.toList(rlpParentNodes);
 
@@ -35,6 +36,9 @@ library MerklePatriciaVerifier {
 			require(pathPtr <= nibblePath.length, "Path overflow");
 
 			currentNode = Rlp.toBytes(parentNodes[i]);
+			bool nodeEval = (nodeKey == keccak256(currentNode));
+			console.logBytes32(nodeKey);
+			console.logBytes32(keccak256(currentNode));
 			require(nodeKey == keccak256(currentNode), "node doesn't match key");
 			currentNodeList = Rlp.toList(parentNodes[i]);
 

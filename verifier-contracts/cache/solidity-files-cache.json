@@ -36,7 +36,7 @@
       ]
     },
     "/home/dangerousfood/dev/uniswap-oracle/verifier-contracts/contracts/BlockVerifier.sol": {
-      "lastModificationDate": 1624302080844,
+      "lastModificationDate": 1624302104889,
       "contentHash": "845e76232c8b94cbf78574d7e7bf56d7",
       "sourceName": "contracts/BlockVerifier.sol",
       "solcConfig": {
@@ -72,8 +72,8 @@
       ]
     },
     "/home/dangerousfood/dev/uniswap-oracle/verifier-contracts/contracts/UniswapOracle.sol": {
-      "lastModificationDate": 1624301179007,
-      "contentHash": "a60348f141f1d58f2b98eaeefbf0bed0",
+      "lastModificationDate": 1624313560177,
+      "contentHash": "735fb3c3cdb0f334329467408d2cc325",
       "sourceName": "contracts/UniswapOracle.sol",
       "solcConfig": {
         "version": "0.6.8",
@@ -113,8 +113,8 @@
       ]
     },
     "/home/dangerousfood/dev/uniswap-oracle/verifier-contracts/contracts/MerklePatriciaVerifier.sol": {
-      "lastModificationDate": 1623793741110,
-      "contentHash": "9d794ec0114f3a91d8a38b7d27614d24",
+      "lastModificationDate": 1624384809706,
+      "contentHash": "7f95923054f04af721618fefb70296a7",
       "sourceName": "contracts/MerklePatriciaVerifier.sol",
       "solcConfig": {
         "version": "0.6.8",
@@ -139,7 +139,8 @@
         }
       },
       "imports": [
-        "./Rlp.sol"
+        "./Rlp.sol",
+        "hardhat/console.sol"
       ],
       "versionPragmas": [
         "0.6.8"
